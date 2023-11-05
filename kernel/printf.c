@@ -133,3 +133,15 @@ printfinit(void)
   initlock(&pr.lock, "pr");
   pr.locking = 1;
 }
+
+void
+backtrace(void)
+{
+  printf("backtrace:\n");
+  
+  uint64 s0 = r_fp();
+  for(uint64* p = (uint64*)s0;(uint64)p<PGROUNDDOWN(s0)+PGSIZE;){
+    printf("%p\n",*(p-1));    //注意这个地方：p-1计算的是p减去一个指针的大小，而不是减去一个字节的大小
+    p = (uint64*)*(p-2);
+  }
+}
